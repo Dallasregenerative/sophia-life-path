@@ -11,7 +11,46 @@ import {
   Sunrise,
   ArrowRight,
   Clock,
+  Trophy,
+  GraduationCap,
+  Briefcase,
+  TrendingUp,
 } from "lucide-react";
+
+const discoveries: { icon: React.ReactNode; text: string }[] = [
+  {
+    icon: <Sparkles className="w-4 h-4" />,
+    text: "Your MBTI personality type — a 4-letter code that reveals how you think, decide, and engage with the world",
+  },
+  {
+    icon: <Compass className="w-4 h-4" />,
+    text: "Your RIASEC interest profile — your top 3 career themes (like Artistic, Social, Investigative) that align with what genuinely interests you",
+  },
+  {
+    icon: <Brain className="w-4 h-4" />,
+    text: "Your Big Five traits — openness, conscientiousness, and how your temperament shapes where you'll thrive",
+  },
+  {
+    icon: <Heart className="w-4 h-4" />,
+    text: "Your top 3 core values — what actually motivates you beyond just money or prestige",
+  },
+  {
+    icon: <Trophy className="w-4 h-4" />,
+    text: "Your character archetype — Hero, Explorer, Creator, Caregiver, Sage, or Ruler — the story your life wants to tell",
+  },
+  {
+    icon: <GraduationCap className="w-4 h-4" />,
+    text: "Your top 10 college majors — ranked matches to consider applying for",
+  },
+  {
+    icon: <Briefcase className="w-4 h-4" />,
+    text: "Your top 10 career matches — with salary ranges, growth outlook, and AI-era resilience scores",
+  },
+  {
+    icon: <TrendingUp className="w-4 h-4" />,
+    text: "Where you'll thrive — work environment, team dynamics, and pace that fit you best",
+  },
+];
 
 const segmentIcons: Record<string, React.ReactNode> = {
   Sparkles: <Sparkles className="w-5 h-5" />,
@@ -105,6 +144,26 @@ export default function WelcomePage() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* What You'll Discover */}
+      <div className="max-w-3xl mx-auto px-6 pb-12">
+        <div className="p-6 bg-white rounded-xl border border-cream-200">
+          <h2 className="font-serif text-xl text-gray-900 mb-1">What You'll Discover</h2>
+          <p className="text-sm text-gray-500 mb-5">
+            Everything your personalized results report will include.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+            {discoveries.map((d, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500">
+                  {d.icon}
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed">{d.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

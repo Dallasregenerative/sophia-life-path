@@ -499,6 +499,77 @@ function HappinessSection({ data }: { data: HappinessResult }) {
 }
 
 // ============================================================
+// Section H2: Top 10 College Majors
+// ============================================================
+function MajorsSection({ data }: { data: CareerMatch[] }) {
+  const top10Careers = data.slice(0, 10);
+
+  const majorMap = new Map<string, { weight: number; careers: string[] }>();
+  top10Careers.forEach((career) => {
+    const weight = (career.matchScore || 0) / 100;
+    (career.collegeMajors || []).forEach((major) => {
+      const entry = majorMap.get(major) || { weight: 0, careers: [] };
+      entry.weight += weight;
+      entry.careers.push(career.name);
+      majorMap.set(major, entry);
+    });
+  });
+
+  const ranked = Array.from(majorMap.entries())
+    .map(([major, v]) => ({ major, ...v }))
+    .sort((a, b) => b.weight - a.weight || b.careers.length - a.careers.length)
+    .slice(0, 10);
+
+  if (ranked.length === 0) return null;
+
+  const maxWeight = ranked[0].weight || 1;
+
+  const strengthLabel = (count: number) =>
+    count >= 3 ? "Very strong fit" : count === 2 ? "Strong fit" : "Worth exploring";
+
+  return (
+    <section className="space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500">
+          <GraduationCap className="w-5 h-5" />
+        </div>
+        <div>
+          <h2 className="font-serif text-2xl text-gray-900">Your Top 10 College Majors to Consider</h2>
+          <p className="text-sm text-gray-500">Ranked by how often they appear across your strongest career matches</p>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {ranked.map((m, i) => (
+          <div key={m.major} className="bg-white rounded-xl border border-cream-200 p-4">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center">
+                <span className="text-white text-sm font-semibold">{i + 1}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-gray-900">{m.major}</h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Appears in your matches for {m.careers.slice(0, 3).join(", ")}
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex-1 h-1.5 rounded-full bg-cream-200 overflow-hidden max-w-[160px]">
+                    <div
+                      className="h-full bg-rose-500 rounded-full"
+                      style={{ width: `${Math.round((m.weight / maxWeight) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-medium text-rose-500">{strengthLabel(m.careers.length)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
 // Section I: Career Paths
 // ============================================================
 function CareersSection({ data }: { data: CareerMatch[] }) {
@@ -971,6 +1042,7 @@ export default function ResultsPage() {
         <CognitiveSection data={results.cognitiveProfile} />
         <TraitsSection data={results.traitProfile} />
         <HappinessSection data={results.happinessProfile} />
+        <MajorsSection data={results.careerRecommendations} />
         <CareersSection data={results.careerRecommendations} />
         <PractitionerSection
           screening={results.screeningFlags}
